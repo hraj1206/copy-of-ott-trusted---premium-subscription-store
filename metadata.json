@@ -1,0 +1,7 @@
+{
+  "name": "Copy of OTT Trusted - Premium Subscription Store",
+  "description": "A high-end, realistic OTT subscription marketplace featuring seamless user ordering, WhatsApp integration, and a comprehensive admin management panel.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
