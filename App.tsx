@@ -58,6 +58,20 @@ const App: React.FC = () => {
     const saved = localStorage.getItem('appServices');
     return saved ? JSON.parse(saved) : DEFAULT_SERVICES;
   });
+useEffect(() => {
+  const syncServices = () => {
+    const saved = localStorage.getItem('appServices');
+    if (saved) {
+      setServices(JSON.parse(saved));
+    }
+  };
+
+  window.addEventListener('storage', syncServices);
+
+  return () => {
+    window.removeEventListener('storage', syncServices);
+  };
+}, []);
 
   const [settings, setSettings] = useState<AppSettings>(() => {
     const saved = localStorage.getItem('appSettings');
@@ -164,8 +178,18 @@ const App: React.FC = () => {
   };
 
   const updateService = (id: string, updated: Partial<OTTService>) => {
-    setServices(prev => prev.map(s => s.id === id ? { ...s, ...updated } : s));
-  };
+  setServices(prev => {
+    const newServices = prev.map(s =>
+      s.id === id ? { ...s, ...updated } : s
+    );
+
+    // 🔥 force localStorage sync immediately
+    localStorage.setItem('appServices', JSON.stringify(newServices));
+
+    return newServices;
+  });
+};
+
 
   return (
     <AuthContext.Provider value={{ 
