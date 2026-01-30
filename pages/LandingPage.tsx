@@ -61,7 +61,10 @@ const SectionHeader: React.FC<{ title: string; subtitle: string; primary?: strin
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { services, settings } = useAuth();
-  const [selectedService, setSelectedService] = useState<OTTService | null>(null);
+  const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
+const selectedService =
+  services.find(s => s.id === selectedServiceId) || null;
+
   const [showDemoVideo, setShowDemoVideo] = useState(false);
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
@@ -326,7 +329,9 @@ useEffect(() => {
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
               whileHover={{ y: -20, scale: 1.03 }}
-              onClick={() => setSelectedService(service)}
+              onClick={() => setSelectedServiceId(service.id)}
+
+
               className={`glass-morphism rounded-[3.5rem] p-10 md:p-14 cursor-pointer transition-all group relative overflow-hidden flex flex-col items-center text-center shadow-2xl border ${
                 service.isRecommended ? 'border-yellow-500/40' : 'border-white/5'
               } hover:border-primary/50`}
@@ -397,7 +402,7 @@ useEffect(() => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setSelectedService(null)}
+              onClick={() => setSelectedServiceId(null)}
               className="absolute inset-0 bg-black/98 backdrop-blur-3xl"
             />
             <motion.div 
@@ -468,7 +473,8 @@ useEffect(() => {
                 </div>
               </div>
               <button 
-                onClick={() => setSelectedService(null)}
+                onClick={() => setSelectedServiceId(null)}
+
                 className="w-full py-6 bg-surface border-t border-white/10 text-gray-500 font-black uppercase text-[10px] tracking-[0.4em] hover:text-white transition-colors"
               >
                 CLOSE PROTOCOL
